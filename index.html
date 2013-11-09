@@ -159,8 +159,14 @@ section {
 
     d3.select("#data1")
         .on("click", function(d,i) {
-            change(data1);
-        })   
+          /*month = svg.selectAll(".month")
+            .data(data2)*/
+          month.selectAll("rect")
+            .transition()
+              .duration(1000)
+              .attr("height", 100);
+
+           });
     d3.select("#data2")
         .on("click", function(d,i) {
             change(data2);
