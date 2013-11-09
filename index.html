@@ -54,8 +54,8 @@ section {
 
       <div id="demo">
         <div id="buttons">
-        <button id="data1">Year</button>
-        <button id="data2">Month</button>
+        <button id="data1" onclick="yearfxn()">Year</button>
+        <button id="data2" onclick="monthfxn()">Month</button>
       
         </div>
      <!-- <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="svg"></svg> -->
@@ -94,84 +94,174 @@ section {
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  d3.csv("assets/data/FauxData.csv", function(error, data) {
-    data = data.filter(function(row) {
-      return row['Year'] == '2013' || row['Year'] == '2012' || row['Year'] == '2011'; // change filter here
+  function yearfxn () {
+    d3.csv("assets/data/FauxData.csv", function(error, data) {
+      data = data.filter(function(row) {
+        return row['Year'] == '2013' || row['Year'] == '2012' || row['Year'] == '2011'; // change filter here
+      });
+      // data1 = data;
+      // data2 = data.filter(function(row) {
+      //   return row['Year'] == '2013' || row['Year'] == '2012'; // change filter here
+      // });
+      color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Year" && key !== "Month"; }));
+
+      data.forEach(function(d) {
+        var y0 = 0;
+        d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
+        d.ages.forEach(function(d) { d.y0 /= y0; d.y1 /= y0; });
+      });
+
+     /* data.sort(function(a, b) { return b.ages[0].y1 - a.ages[0].y1; });*/
+
+      x.domain(data.map(function(d) { return d.Month; }));
+
+      svg.append("g")
+          .attr("class", "x axis")
+          .attr("id","one")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis);
+
+      svg.append("g")
+          .attr("class", "y axis")
+          .call(yAxis);
+
+      //here
+      //svg.setAttribute('id','oneid');
+
+      var month = svg.selectAll(".month")
+          .data(data)
+        .enter().append("g")
+          .attr("class", "month")
+          .attr("transform", function(d) { return "translate(" + x(d.Month) + ",0)"; });
+
+      month.selectAll("rect")
+          .data(function(d) { return d.ages; })
+        .enter().append("rect")
+          .attr("width", x.rangeBand())
+          .attr("y", function(d) { return y(d.y1); })
+          .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+          .style("fill", function(d) { return color(d.name); });
+
+      var legend = svg.select(".month:last-child").selectAll(".legend")
+          .data(function(d) { return d.ages; })
+        .enter().append("g")
+          .attr("class", "legend")
+          .attr("transform", function(d) { return "translate(" + x.rangeBand() / 1 + "," + y((d.y0 + d.y1) / 2) + ")"; });
+
+      legend.append("line")
+          .attr("x2", 10);
+
+      legend.append("text")
+          .attr("x", 15)
+          .attr("dy", ".35em")
+          .text(function(d) { return d.name; });
+
+      function change(inp) {
+        console.log(inp);
+        // alert("hi");
+        // alert(inp);
+      } 
+
+      // d3.select("#data1")
+      //     .on("click", function(d,i) {
+      //       /*month = svg.selectAll(".month")
+      //         .data(data2)*/
+      //       month.selectAll("rect")
+      //         .transition()
+      //           .duration(1000)
+      //           .attr("height", 100);
+
+      //        });
+      // d3.select("#data2")
+      //     .on("click", function(d,i) {
+      //         change(data2);
+      //     })   
+
     });
-    data1 = data;
-    data2 = data.filter(function(row) {
-      return row['Year'] == '2013' || row['Year'] == '2012'; // change filter here
+
+    
+}
+
+function monthfxn() {
+      d3.csv("assets/data/FauxData.csv", function(error, data) {
+      // data = data.filter(function(row) {
+      //   return row['Year'] == '2013'; // change filter here
+      // });
+      //data1 = data;
+      data = data.filter(function(row) {
+        return row['Year'] == '2013' || row['Year'] == '2012'; // change filter here
+      });
+      color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Year" && key !== "Month"; }));
+
+      data.forEach(function(d) {
+        var y0 = 0;
+        d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
+        d.ages.forEach(function(d) { d.y0 /= y0; d.y1 /= y0; });
+      });
+
+     /* data.sort(function(a, b) { return b.ages[0].y1 - a.ages[0].y1; });*/
+
+      x.domain(data.map(function(d) { return d.Month; }));
+
+      svg.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis);
+
+      svg.append("g")
+          .attr("class", "y axis")
+          .call(yAxis);
+
+      var month = svg.selectAll(".month")
+          .data(data)
+        .enter().append("g")
+          .attr("class", "month")
+          .attr("transform", function(d) { return "translate(" + x(d.Month) + ",0)"; });
+
+      month.selectAll("rect")
+          .data(function(d) { return d.ages; })
+        .enter().append("rect")
+          .attr("width", x.rangeBand())
+          .attr("y", function(d) { return y(d.y1); })
+          .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+          .style("fill", function(d) { return color(d.name); });
+
+      var legend = svg.select(".month:last-child").selectAll(".legend")
+          .data(function(d) { return d.ages; })
+        .enter().append("g")
+          .attr("class", "legend")
+          .attr("transform", function(d) { return "translate(" + x.rangeBand() / 1 + "," + y((d.y0 + d.y1) / 2) + ")"; });
+
+      legend.append("line")
+          .attr("x2", 10);
+
+      legend.append("text")
+          .attr("x", 15)
+          .attr("dy", ".35em")
+          .text(function(d) { return d.name; });
+
+      function change(inp) {
+        console.log(inp);
+        // alert("hi");
+        // alert(inp);
+      } 
+
+      // d3.select("#data1")
+      //     .on("click", function(d,i) {
+      //       /*month = svg.selectAll(".month")
+      //         .data(data2)*/
+      //       month.selectAll("rect")
+      //         .transition()
+      //           .duration(1000)
+      //           .attr("height", 100);
+
+      //        });
+      // d3.select("#data2")
+      //     .on("click", function(d,i) {
+      //         change(data2);
+      //     })   
+
     });
-    color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Year" && key !== "Month"; }));
-
-    data.forEach(function(d) {
-      var y0 = 0;
-      d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
-      d.ages.forEach(function(d) { d.y0 /= y0; d.y1 /= y0; });
-    });
-
-   /* data.sort(function(a, b) { return b.ages[0].y1 - a.ages[0].y1; });*/
-
-    x.domain(data.map(function(d) { return d.Month; }));
-
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
-
-    var month = svg.selectAll(".month")
-        .data(data)
-      .enter().append("g")
-        .attr("class", "month")
-        .attr("transform", function(d) { return "translate(" + x(d.Month) + ",0)"; });
-
-    month.selectAll("rect")
-        .data(function(d) { return d.ages; })
-      .enter().append("rect")
-        .attr("width", x.rangeBand())
-        .attr("y", function(d) { return y(d.y1); })
-        .attr("height", function(d) { return y(d.y0) - y(d.y1); })
-        .style("fill", function(d) { return color(d.name); });
-
-    var legend = svg.select(".month:last-child").selectAll(".legend")
-        .data(function(d) { return d.ages; })
-      .enter().append("g")
-        .attr("class", "legend")
-        .attr("transform", function(d) { return "translate(" + x.rangeBand() / 1 + "," + y((d.y0 + d.y1) / 2) + ")"; });
-
-    legend.append("line")
-        .attr("x2", 10);
-
-    legend.append("text")
-        .attr("x", 15)
-        .attr("dy", ".35em")
-        .text(function(d) { return d.name; });
-
-    function change(inp) {
-      console.log(inp);
-      alert("hi");
-      alert(inp);
-    } 
-
-    d3.select("#data1")
-        .on("click", function(d,i) {
-          /*month = svg.selectAll(".month")
-            .data(data2)*/
-          month.selectAll("rect")
-            .transition()
-              .duration(1000)
-              .attr("height", 100);
-
-           });
-    d3.select("#data2")
-        .on("click", function(d,i) {
-            change(data2);
-        })   
-
-  });
+}
 
   </script>
