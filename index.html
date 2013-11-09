@@ -42,7 +42,7 @@ var y = d3.scale.linear()
     .rangeRound([height, 0]);
 
 var color = d3.scale.ordinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+    .range(["#5DA5DA", "#FAA43A", "#60BD68", "#F17CB0", "#B276B2", "#DECF3F", "#F15854"]);
 
 var xAxis = d3.svg.axis()
     .scale(x)
@@ -59,8 +59,8 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.csv("assets/data/data.csv", function(error, data) {
-  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "State"; }));
+d3.csv("assets/data/FauxData.csv", function(error, data) {
+  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Month"; }));
 
   data.forEach(function(d) {
     var y0 = 0;
@@ -68,9 +68,9 @@ d3.csv("assets/data/data.csv", function(error, data) {
     d.ages.forEach(function(d) { d.y0 /= y0; d.y1 /= y0; });
   });
 
-  data.sort(function(a, b) { return b.ages[0].y1 - a.ages[0].y1; });
+  // data.sort(function(a, b) { return b.ages[0].y1 - a.ages[0].y1; });
 
-  x.domain(data.map(function(d) { return d.State; }));
+  x.domain(data.map(function(d) { return d.Month; }));
 
   svg.append("g")
       .attr("class", "x axis")
@@ -81,13 +81,13 @@ d3.csv("assets/data/data.csv", function(error, data) {
       .attr("class", "y axis")
       .call(yAxis);
 
-  var state = svg.selectAll(".state")
+  var month = svg.selectAll(".month")
       .data(data)
     .enter().append("g")
-      .attr("class", "state")
-      .attr("transform", function(d) { return "translate(" + x(d.State) + ",0)"; });
+      .attr("class", "month")
+      .attr("transform", function(d) { return "translate(" + x(d.Month) + ",0)"; });
 
-  state.selectAll("rect")
+  month.selectAll("rect")
       .data(function(d) { return d.ages; })
     .enter().append("rect")
       .attr("width", x.rangeBand())
@@ -95,7 +95,7 @@ d3.csv("assets/data/data.csv", function(error, data) {
       .attr("height", function(d) { return y(d.y0) - y(d.y1); })
       .style("fill", function(d) { return color(d.name); });
 
-  var legend = svg.select(".state:last-child").selectAll(".legend")
+  var legend = svg.select(".month:last-child").selectAll(".legend")
       .data(function(d) { return d.ages; })
     .enter().append("g")
       .attr("class", "legend")
