@@ -1,0 +1,67 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>A2 Data Dive: YMCA Membership Visualizations</title>
+  <meta name="description" content="A2 Data Dive: YMCA Membership Visualizations">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="js/libs/modernizr-2.0.6.min.js"></script>
+</head>
+
+<body>
+
+  <div id="container" class="container">
+    <header>
+    <h1>A2 Data Dive: YMCA Membership Visualizations</h1>
+    <p>We are exploring YMCA membership data based on type of membership, by age of member, looking at the amount of active membership each month. We've chosen to visualize this data using the d3.js library.</p>
+    </header>
+    <div id="main" role="main">
+      <div class="btn-group" data-toggle="buttons-radio">
+        <button type="button" id="all" class="btn active switch">All Years</button>
+        <button type="button" id="yr2013" class="btn switch">2013</button>
+        <button type="button" id="yr2012" class="btn switch">2012</button>
+        <button type="button" id="yr2011" class="btn switch">2011</button>
+        <button type="button" id="yr2010" class="btn switch">2010</button>
+        <button type="button" id="yr2009" class="btn switch">2009</button>
+        <button type="button" id="yr2008" class="btn switch">2008</button>
+        <button type="button" id="yr2007" class="btn switch">2007</button>
+        <button type="button" id="yr2006" class="btn switch">2006</button>
+        <button type="button" id="yr2005" class="btn switch">2005</button>
+        <button type="button" id="yr2004" class="btn switch">2004</button>
+        <button type="button" id="yr2003" class="btn switch">2003</button>
+        <button type="button" id="yr2002" class="btn switch">2002</button>
+        <button type="button" id="yr2001" class="btn switch">2001</button>
+        <button type="button" id="yr2000" class="btn switch">2000</button>
+      </div>
+      <div id="vis"></div>
+    </div>
+    <footer>
+    <p>Data from <a href="https://nycopendata.socrata.com/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9">NYC OpenData</a>. More information about these complaint categories can be found on the <a href="http://www.nyc.gov/apps/311/allServices.htm?requestType=Navigation">NYC 311 site</a>.</p>
+    </footer>
+  </div> <!--! end of #container -->
+  <div id="legend"></div>
+
+  <script src="js/libs/jquery-1.7.2.min.js"></script>
+  <script defer src="js/plugins.js"></script>
+  <script src="js/libs/coffee-script.js"></script>
+  <script src="js/libs/bootstrap.min.js"></script>
+  <script src="js/libs/d3.v3.js"></script>
+  <script type="text/coffeescript" src="coffee/vis.coffee"></script>
+
+  <!--[if lt IE 7 ]>
+    <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+    <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+  <![endif]-->
+  
+</body>
+</html>
