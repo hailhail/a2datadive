@@ -94,7 +94,7 @@ section {
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  d3.csv("assets/data/FauxData.csv", function(error, data) {
+  d3.csv("assets/data/ymcadata.csv", function(error, data) {
     data = data.filter(function(row) {
       return row['Year'] == '2013' || row['Year'] == '2012' || row['Year'] == '2011'; // change filter here
     });
